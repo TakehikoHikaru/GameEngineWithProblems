@@ -29,6 +29,8 @@ public class Player extends Entity {
 
     public static double life = 100;
 
+    public static int ammo = 0;
+
     //Array de Sprites do jogador virado para direita
     private BufferedImage[] rightPlayer;
     //Array de Sprites do jogador virado para esquerda
@@ -52,19 +54,19 @@ public class Player extends Entity {
     @Override
     public void tick() {
         moved = false;
-        if (right && World.isFree((int)(this.getX()+ speed), this.getY())){
+        if (right && World.isFree((int) (this.getX() + speed), this.getY())) {
             moved = true;
             dir = rightDir;
             setX(x += speed);
-        } else if (left && World.isFree((int)(this.getX() - speed), this.getY())) {
+        } else if (left && World.isFree((int) (this.getX() - speed), this.getY())) {
             moved = true;
             dir = leftDir;
             setX(x -= speed);
         }
-        if (up && World.isFree(this.getX(),(int)(this.getY() - speed))) {
+        if (up && World.isFree(this.getX(), (int) (this.getY() - speed))) {
             moved = true;
             setY(y -= speed);
-        } else if (down && World.isFree(this.getX(),(int)(this.getY()+speed))) {
+        } else if (down && World.isFree(this.getX(), (int) (this.getY() + speed))) {
             moved = true;
             setY(y += speed);
         }
@@ -88,25 +90,36 @@ public class Player extends Entity {
 
     }
 
-    private void heal(int heal){
-        if((heal + life) > 100){
+    private void heal(int heal) {
+        if ((heal + life) > 100) {
             life = 100;
-        }else {
+        } else {
             life += heal;
         }
     }
 
-    public void collidingWithEntities(){
+    public void collidingWithEntities() {
         for (int i = 0; i < Game.entities.size(); i++) {
             Entity current = Game.entities.get(i);
-            if (current instanceof Heal){
-                if (Entity.isColliding(this,current)){
+            if (current instanceof Heal) {
+                if (Entity.isColliding(this, current)) {
+                    if(life < 100) {
+                        Game.entities.remove(i);
+                    }
                     heal(20);
+                }
+
+
+            } else if (current instanceof Bullet) {
+                if (Entity.isColliding(this, current)) {
+                    ammo += 20;
                     Game.entities.remove(i);
                 }
             }
         }
     }
+
+
 
     @Override
     public void render(Graphics g) {

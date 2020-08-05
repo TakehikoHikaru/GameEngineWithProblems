@@ -14,5 +14,10 @@ public class UI {
         g.setColor(Color.white);
         g.setFont(new Font("arial",Font.BOLD,9));
         g.drawString((int) Game.player.life + "/100", 4, 8);
+
+        g.setColor(Color.white);
+        g.setFont(new Font("arial",Font.BOLD,10));
+        g.drawString("Munição: "+Game.player.ammo,Game.WIDTH - 80,10);
+
     }
 }
