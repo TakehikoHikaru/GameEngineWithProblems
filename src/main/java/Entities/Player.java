@@ -27,7 +27,7 @@ public class Player extends Entity {
 
     private boolean moved = false;
 
-    public static int life = 100;
+    public static double life = 100;
 
     //Array de Sprites do jogador virado para direita
     private BufferedImage[] rightPlayer;

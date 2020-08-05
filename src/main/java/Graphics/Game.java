@@ -53,6 +53,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     public static Random random;
 
+    public UI ui;
+
     public Game() throws IOException {
         random = new Random();
         //Habilita o keyListener nessa classe
@@ -62,7 +64,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
         this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
         initFrame();
 
-
+        ui = new UI();
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         //Inicaliza -entities-
         entities = new ArrayList<Entity>();
@@ -180,10 +182,11 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 
         //renderiza Strings na tela
-        g.setFont(new Font("Arial", Font.BOLD, 10));
-        g.setColor(Color.white);
-        g.drawString("Fps:", 10, 10);
+//        g.setFont(new Font("Arial", Font.BOLD, 10));
+//        g.setColor(Color.white);
+//        g.drawString("Fps:", 10, 10);
 
+        ui.render(g);
 
         g.dispose();
         g = bs.getDrawGraphics();
