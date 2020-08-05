@@ -60,7 +60,7 @@ public class Enemy extends Entity {
                 Game.player.life -= 10;
             }
             if (Game.player.life <= 0) {
-           //    System.exit(1);
+               System.exit(1);
             }
         }
 

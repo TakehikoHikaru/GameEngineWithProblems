@@ -70,13 +70,13 @@ public class Game extends Canvas implements Runnable, KeyListener {
         entities = new ArrayList<Entity>();
         enemies = new ArrayList<Enemy>();
         //Inicializa -spriteSheet- com arquivos de imagens
-        spriteSheet = new SpriteSheet("C:/Users/Guilherme/Documents/GameEngineProject/src/main/resources/res/SpritSheet.png");
+        spriteSheet = new SpriteSheet(System.getProperty("user.dir")+"/src/main/resources/res/SpritSheet.png");
         //instacia o jogador
         player = new Player(0, 0, 16, 16, spriteSheet.getSprite(0, 0, 16, 16));
         //adiciona uma entidade do tipo jogar a lista de entidades
         entities.add(player);
         //Inicializa o map
-        world = new World("C:/Users/Guilherme/Documents/GameEngineProject/src/main/resources/res/MapTest.png");
+        world = new World(System.getProperty("user.dir")+"/src/main/resources/res/MapTest.png");
     }
 
     private void createFolder() throws IOException {
