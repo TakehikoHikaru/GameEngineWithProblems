@@ -1,0 +1,260 @@
+package Graphics;
+
+import Entities.Enemy;
+import Entities.Entity;
+import Entities.Player;
+import World.World;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public class Game extends Canvas implements Runnable, KeyListener {
+
+
+    // Janela
+    public static JFrame frame;
+    // Tamanho e Escala da Janela
+    public static final int WIDTH = 160;
+    public static final int HEIGHT = 120;
+    private final int SCALE = 5;
+    //
+    private Thread thread;
+    // Verifica se o jogo esta rodando
+    private boolean isRunning = true;
+    //Layer do fundo da tela
+    private BufferedImage image;
+
+    //Arquivos com as Sprites do jogo
+    public static SpriteSheet spriteSheet;
+
+    //Lista de Entidades já adicionadas
+    public static List<Entity> entities;
+
+    //Lista todas a Entidades de inimigos
+    public static List<Enemy> enemies;
+
+    //Objeto do jogador
+    public static Player player;
+
+    //Estancia o mundo
+    public static World world;
+
+    public static Random random;
+
+    public Game() throws IOException {
+        random = new Random();
+        //Habilita o keyListener nessa classe
+        addKeyListener(this);
+
+        //seta o tamanho da janela
+        this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
+        initFrame();
+
+
+        image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+        //Inicaliza -entities-
+        entities = new ArrayList<Entity>();
+        enemies = new ArrayList<Enemy>();
+        //Inicializa -spriteSheet- com arquivos de imagens
+        spriteSheet = new SpriteSheet("C:/Users/Guilherme/Documents/GameEngineProject/src/main/resources/res/SpritSheet.png");
+        //instacia o jogador
+        player = new Player(0, 0, 16, 16, spriteSheet.getSprite(0, 0, 16, 16));
+        //adiciona uma entidade do tipo jogar a lista de entidades
+        entities.add(player);
+        //Inicializa o map
+        world = new World("C:/Users/Guilherme/Documents/GameEngineProject/src/main/resources/res/MapTest.png");
+    }
+
+    private void createFolder() throws IOException {
+        String FileFolder = System.getenv("APPDATA") + "\\" + "TestGame";
+        System.out.println(System.getProperty("user.dir"));
+        String os = System.getProperty("os.name").toUpperCase();
+        if (os.contains("WIN")) {
+            FileFolder = System.getenv("APPDATA") + "\\" + "TestGame";
+            System.out.println("Found windows");
+        }
+        if (os.contains("MAC")) {
+            FileFolder = System.getProperty("user.home") + "/Library/Application " + "TestGame"
+                    + "TestGame";
+            System.out.println("Found mac");
+        }
+        if (os.contains("NUX")) {
+            FileFolder = System.getProperty("user.dir") + ".Launcher";
+            System.out.println("Found linux");
+        }
+
+        File directory = new File(FileFolder);
+
+        if (directory.exists()) {
+            System.out.println("Found folder");
+        }
+
+        if (directory.exists() == false) {
+            directory.mkdir();
+            System.out.println("Could not find folder so created it");
+        }
+
+        Path source = Paths.get(System.getProperty("user.dir")+"/src/main/resources/res/MapTest.png");
+        Path dest = Paths.get(System.getenv("APPDATA") + "\\" + "TestGame\\Map.png");
+
+        Files.copy(source,dest);
+    }
+
+    /**
+     * Inicializa configurações da janela
+     */
+    public void initFrame() {
+        //cria a janela
+        frame = new JFrame("ProjectFac");
+        //adiciona as configurações na janela
+        frame.add(this);
+        //Set configurações da janela
+        frame.setResizable(false);
+        frame.pack();
+        frame.requestFocus();
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+
+    public synchronized void Start() {
+        thread = new Thread(this);
+        thread.start();
+    }
+
+    public synchronized void Stop() {
+        isRunning = false;
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        //Inicia a janela
+        Game game = new Game();
+        //inicia o jogo
+        game.Start();
+    }
+
+    public void tick() {
+        //executa o metodo tick para cada Entidade
+        for (int i = 0; i < entities.size(); i++) {
+            Entity e = entities.get(i);
+            e.tick();
+        }
+    }
+
+    public void render() {
+        BufferStrategy bs = this.getBufferStrategy();
+        if (bs == null) {
+            this.createBufferStrategy(3);
+            return;
+        }
+        //set o layer do fundo;
+        Graphics g = image.getGraphics();
+        g.setColor(Color.blue);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
+
+        //Executa o metodo de render do map
+        world.render(g);
+
+        //Executa o metodo render para cada Entidade
+        for (int i = 0; i < entities.size(); i++) {
+            Entity e = entities.get(i);
+            e.render(g);
+        }
+
+
+        //renderiza Strings na tela
+        g.setFont(new Font("Arial", Font.BOLD, 10));
+        g.setColor(Color.white);
+        g.drawString("Fps:", 10, 10);
+
+
+        g.dispose();
+        g = bs.getDrawGraphics();
+        g.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
+        bs.show();
+    }
+
+    /**
+     * Logica de limitação de FPS pegando o tempo to Sistema e coparando
+     * com a ultima atualização para detectar quando atualizar o tick o render
+     */
+    public void run() {
+        long lastTime = System.nanoTime();
+        double amountOfTicks = 60.0;
+        double ns = 1000000000 / amountOfTicks;
+        double delta = 0;
+        int frames = 0;
+        double timer = System.currentTimeMillis();
+        while (isRunning) {
+            long now = System.nanoTime();
+            delta += (now - lastTime) / ns;
+            lastTime = now;
+            if (delta >= 1) {
+                tick();
+                render();
+                frames++;
+                delta--;
+            }
+            if (System.currentTimeMillis() - timer >= 1000) {
+                //System.out.println("FPS:" + frames);
+                frames = 0;
+                timer += 1000;
+            }
+        }
+        Stop();
+    }
+
+    //Metodo que leitura de teclado do java
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    //Metodo que leitura de teclado do java
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_D) {
+            player.right = true;
+        } else if (e.getKeyCode() == KeyEvent.VK_A) {
+            player.left = true;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_W) {
+            player.up = true;
+        } else if (e.getKeyCode() == KeyEvent.VK_S) {
+            player.down = true;
+        }
+
+    }
+
+    //Metodo que leitura de teclado do java
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_D) {
+            player.right = false;
+        } else if (e.getKeyCode() == KeyEvent.VK_A) {
+            player.left = false;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_W) {
+            player.up = false;
+        } else if (e.getKeyCode() == KeyEvent.VK_S) {
+            player.down = false;
+        }
+
+    }
+}
