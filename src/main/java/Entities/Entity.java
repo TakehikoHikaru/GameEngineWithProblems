@@ -72,4 +72,10 @@ public class Entity {
     public void setHeight(int height) {
         this.height = height;
     }
+
+    public static boolean isColliding(Entity e1,Entity e2){
+        Rectangle rectE1 = new Rectangle(e1.getX(),e1.getY(), spriteSize, spriteSize);
+        Rectangle rectE2 = new Rectangle(e2.getX(),e2.getY(), spriteSize, spriteSize);
+        return rectE1.intersects(rectE2);
+    }
 }

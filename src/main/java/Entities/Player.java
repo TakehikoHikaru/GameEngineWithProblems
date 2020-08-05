@@ -80,13 +80,33 @@ public class Player extends Entity {
             }
         }
 
+        collidingWithEntities();
+
         //Controla a World.Camera seguindo o jogador
         Camera.x = Camera.clamp(x - (Game.WIDTH / 2), World.width * 16 - Game.WIDTH, 0);
         Camera.y = Camera.clamp(y - (Game.HEIGHT / 2), World.height * 16 - Game.HEIGHT, 0);
 
     }
 
-    String texto;
+    private void heal(int heal){
+        if((heal + life) > 100){
+            life = 100;
+        }else {
+            life += heal;
+        }
+    }
+
+    public void collidingWithEntities(){
+        for (int i = 0; i < Game.entities.size(); i++) {
+            Entity current = Game.entities.get(i);
+            if (current instanceof Heal){
+                if (Entity.isColliding(this,current)){
+                    heal(20);
+                    Game.entities.remove(i);
+                }
+            }
+        }
+    }
 
     @Override
     public void render(Graphics g) {
