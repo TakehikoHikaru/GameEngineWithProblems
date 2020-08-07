@@ -10,7 +10,7 @@ public class Enemy extends Entity {
 
     private final int spriteSize = 16;
 
-    private double speed = 1;
+    private double speed = 2;
     public boolean right, up, left, down;
 
     private int frames = 0;
@@ -20,6 +20,8 @@ public class Enemy extends Entity {
     private int maxIndex = 1;
 
     private BufferedImage sprites[];
+
+    private int life = 50;
 
     public Enemy(int x, int y, int width, int height, BufferedImage sprite) {
         super(x, y, width, height, null);
@@ -61,6 +63,10 @@ public class Enemy extends Entity {
             }
         }
 
+        if (this.life <= 0){
+            die();
+        }
+
     }
 
     public boolean isCollidingWithPlayer() {
@@ -75,6 +81,7 @@ public class Enemy extends Entity {
     public boolean isColliding(int nextX, int nextY) {
         Rectangle currentEnemy = new Rectangle(nextX, nextY, World.spriteSize, World.spriteSize);
 
+        //Chega colisoes dos inimigos
         for (int i = 0; i < Game.enemies.size(); i++) {
             Enemy e = Game.enemies.get(i);
             if (e == this) {
@@ -85,7 +92,23 @@ public class Enemy extends Entity {
                 return true;
             }
         }
+
+        for (int i = 0; i < Game.bullets.size(); i++) {
+            Entity e = Game.bullets.get(i);
+            if (e instanceof ShootedBullet){
+                if(Entity.isColliding(this, e)){
+                this.life -= 5;
+                Game.bullets.remove(i);
+                }
+            }
+        }
+
         return false;
+    }
+
+    public void die(){
+        Game.entities.remove(this);
+        Game.enemies.remove(this);
     }
 
     @Override

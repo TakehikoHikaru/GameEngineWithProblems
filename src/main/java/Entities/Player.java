@@ -13,7 +13,7 @@ public class Player extends Entity {
     final private int spriteSize = 16;
 
     public boolean right, up, left, down;
-    public double speed = 2;
+    public double speed = 3;
 
     //Controla a direção do personagem parado
     final int rightDir = 0;
