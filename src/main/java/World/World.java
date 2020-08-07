@@ -65,7 +65,7 @@ public class World {
                             break;
                         case 0xFF303030:
                             //Gun
-                            Game.entities.add(new Weapon(i * 16, j * 16, 16, 16, Entity.pistol));
+                            Game.entities.add(new Weapon(i * 16, j * 16, 16, 16, Entity.rightPistol));
                             break;
                         case 0xFF133F00:
                             tiles[pos] = new WallTile(Tile.tileFloor,i*16,j*16);

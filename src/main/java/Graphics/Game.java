@@ -3,12 +3,15 @@ package Graphics;
 import Entities.Enemy;
 import Entities.Entity;
 import Entities.Player;
-import World.World;
+import Entities.ShootedBullet;
+import World.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -20,15 +23,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Game extends Canvas implements Runnable, KeyListener {
+public class Game extends Canvas implements Runnable, KeyListener, MouseListener {
 
 
     // Janela
     public static JFrame frame;
     // Tamanho e Escala da Janela
-    public static final int WIDTH = 160;
-    public static final int HEIGHT = 120;
-    private final int SCALE = 5;
+    public static final int WIDTH = 400;
+    public static final int HEIGHT = 260;
+    private final int SCALE = 2;
     //
     private Thread thread;
     // Verifica se o jogo esta rodando
@@ -45,6 +48,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
     //Lista todas a Entidades de inimigos
     public static List<Enemy> enemies;
 
+    public static List<ShootedBullet> bullets;
+
     //Objeto do jogador
     public static Player player;
 
@@ -59,6 +64,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
         random = new Random();
         //Habilita o keyListener nessa classe
         addKeyListener(this);
+        addMouseListener(this);
 
         //seta o tamanho da janela
         this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
@@ -75,6 +81,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
         player = new Player(0, 0, 16, 16, spriteSheet.getSprite(0, 0, 16, 16));
         //adiciona uma entidade do tipo jogar a lista de entidades
         entities.add(player);
+
+        bullets = new ArrayList<ShootedBullet>();
         //Inicializa o map
         world = new World(System.getProperty("user.dir")+"/src/main/resources/res/MapTest.png");
     }
@@ -158,6 +166,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
             Entity e = entities.get(i);
             e.tick();
         }
+        for (int i = 0; i < bullets.size(); i++) {
+            bullets.get(i).tick();
+        }
     }
 
     public void render() {
@@ -179,7 +190,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
             Entity e = entities.get(i);
             e.render(g);
         }
-
+        for (int i = 0; i < bullets.size(); i++) {
+            bullets.get(i).render(g);
+        }
 
         //renderiza Strings na tela
 //        g.setFont(new Font("Arial", Font.BOLD, 10));
@@ -243,6 +256,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
             player.down = true;
         }
 
+        if (e.getKeyCode() == KeyEvent.VK_X){
+            player.shooting = true;
+        }
     }
 
     //Metodo que leitura de teclado do java
@@ -258,6 +274,35 @@ public class Game extends Canvas implements Runnable, KeyListener {
         } else if (e.getKeyCode() == KeyEvent.VK_S) {
             player.down = false;
         }
+        if (e.getKeyCode() == KeyEvent.VK_X){
+            player.shooting = false;
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        player.shootingMouse = true;
+        player.mX = (e.getX() / SCALE);
+        player.mY = (e.getY() / SCALE);
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
 
     }
 }

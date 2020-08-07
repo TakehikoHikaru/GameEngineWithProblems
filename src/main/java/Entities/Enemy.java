@@ -21,7 +21,6 @@ public class Enemy extends Entity {
 
     private BufferedImage sprites[];
 
-
     public Enemy(int x, int y, int width, int height, BufferedImage sprite) {
         super(x, y, width, height, null);
         sprites = new BufferedImage[4];
@@ -57,10 +56,8 @@ public class Enemy extends Entity {
             }
         } else {
             if (Game.random.nextInt(100) < 15) {
+                Game.player.isDamaged = true;
                 Game.player.life -= 10;
-            }
-            if (Game.player.life <= 0) {
-               System.exit(1);
             }
         }
 
