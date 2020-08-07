@@ -13,6 +13,8 @@ public class Entity {
     //Carrega todas as entidades
     final public static BufferedImage lifePack = Game.spriteSheet.getSprite(spriteSize * 0, spriteSize * 4, spriteSize, spriteSize);
     final public static BufferedImage enemy = Game.spriteSheet.getSprite(spriteSize * 0, spriteSize * 3, spriteSize, spriteSize);
+    final public static BufferedImage damagedEnemy = Game.spriteSheet.getSprite(spriteSize*2,spriteSize*3,spriteSize,spriteSize);
+    final public static BufferedImage rangeEnemy = Game.spriteSheet.getSprite(spriteSize*3,spriteSize*3,spriteSize,spriteSize);
     final public static BufferedImage leftPistol = Game.spriteSheet.getSprite(spriteSize * 1, spriteSize * 5, spriteSize, spriteSize);
     final public static BufferedImage rightPistol = Game.spriteSheet.getSprite(spriteSize * 0, spriteSize * 5, spriteSize, spriteSize);
     final public static BufferedImage bullet = Game.spriteSheet.getSprite(spriteSize * 1, spriteSize * 4, spriteSize, spriteSize);

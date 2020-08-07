@@ -10,7 +10,7 @@ public class Enemy extends Entity {
 
     private final int spriteSize = 16;
 
-    private double speed = 2;
+    private double speed = 1;
     public boolean right, up, left, down;
 
     private int frames = 0;
@@ -21,7 +21,13 @@ public class Enemy extends Entity {
 
     private BufferedImage sprites[];
 
+
     private int life = 50;
+    private boolean isDamaged = false;
+
+    private int damageFrames = 0;
+    private int maxDamageFrames = 30;
+
 
     public Enemy(int x, int y, int width, int height, BufferedImage sprite) {
         super(x, y, width, height, null);
@@ -36,6 +42,12 @@ public class Enemy extends Entity {
     @Override
     public void tick() {
 
+        if (this.life < 20){
+            speed = 2;
+            if (Game.enemies.size() == 1){
+                speed = 5;
+            }
+        }
 
         frames++;
         if (frames == maxFrames) {
@@ -45,16 +57,19 @@ public class Enemy extends Entity {
                 index = 0;
             }
         }
+
         if (!isCollidingWithPlayer()) {
-            if ((int) x < Game.player.getX() && World.isFree((getX() + speed), this.getY()) && !isColliding((int) (getX() + speed), this.getY())) {
-                x += speed;
-            } else if ((int) x > Game.player.getX() && World.isFree((getX() - speed), this.getY()) && !isColliding((int) (getX() - speed), this.getY())) {
-                x -= speed;
-            }
-            if ((int) y < Game.player.getY() && World.isFree(this.getX(), (int) (this.getY() + speed)) && !isColliding(this.getX(), (int) (this.getY() + speed))) {
-                y += speed;
-            } else if ((int) y > Game.player.getY() && World.isFree(this.getX(), (int) (this.getY() - speed)) && !isColliding(this.getX(), (int) (this.getY() - speed))) {
-                y -= speed;
+            if (!isDamaged) {
+                if ((int) x < Game.player.getX() && World.isFree((getX() + speed), this.getY()) && !isColliding((int) (getX() + speed), this.getY())) {
+                    x += speed;
+                } else if ((int) x > Game.player.getX() && World.isFree((getX() - speed), this.getY()) && !isColliding((int) (getX() - speed), this.getY())) {
+                    x -= speed;
+                }
+                if ((int) y < Game.player.getY() && World.isFree(this.getX(), (int) (this.getY() + speed)) && !isColliding(this.getX(), (int) (this.getY() + speed))) {
+                    y += speed;
+                } else if ((int) y > Game.player.getY() && World.isFree(this.getX(), (int) (this.getY() - speed)) && !isColliding(this.getX(), (int) (this.getY() - speed))) {
+                    y -= speed;
+                }
             }
         } else {
             if (Game.random.nextInt(100) < 15) {
@@ -63,7 +78,7 @@ public class Enemy extends Entity {
             }
         }
 
-        if (this.life <= 0){
+        if (this.life <= 0) {
             die();
         }
 
@@ -95,10 +110,11 @@ public class Enemy extends Entity {
 
         for (int i = 0; i < Game.bullets.size(); i++) {
             Entity e = Game.bullets.get(i);
-            if (e instanceof ShootedBullet){
-                if(Entity.isColliding(this, e)){
-                this.life -= 5;
-                Game.bullets.remove(i);
+            if (e instanceof ShootedBullet) {
+                if (Entity.isColliding(this, e)) {
+                    this.life -= 5;
+                    isDamaged = true;
+                    Game.bullets.remove(i);
                 }
             }
         }
@@ -106,13 +122,29 @@ public class Enemy extends Entity {
         return false;
     }
 
-    public void die(){
+    public void die() {
         Game.entities.remove(this);
         Game.enemies.remove(this);
     }
 
     @Override
     public void render(Graphics g) {
-        g.drawImage(sprites[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+        if (isDamaged) {
+            damageFrames++;
+            if (damageFrames > maxDamageFrames) {
+
+                damageFrames = 0;
+                this.isDamaged = false;
+            }
+
+            g.drawImage(Entity.damagedEnemy, this.getX() - Camera.x, this.getY() - Camera.y, null);
+        } else {
+            if (Game.enemies.size() == 1){
+                g.drawImage(Entity.rangeEnemy, this.getX() - Camera.x, this.getY() - Camera.y, null);
+            }
+            else{
+                g.drawImage(sprites[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+            }
+            }
     }
 }
