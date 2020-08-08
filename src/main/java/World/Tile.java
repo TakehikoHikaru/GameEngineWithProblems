@@ -10,6 +10,7 @@ public class Tile {
     final static private int spriteSize = 16;
     //Carrega todos os tiles
     public static BufferedImage tileFloor = Game.spriteSheet.getSprite(spriteSize*0,spriteSize,spriteSize,spriteSize);
+    public static BufferedImage grassFlower = Game.spriteSheet.getSprite(spriteSize*2,spriteSize*1,spriteSize,spriteSize);
     public static BufferedImage tileWall = Game.spriteSheet.getSprite(spriteSize,spriteSize,spriteSize,spriteSize);
 
     private BufferedImage sprite;

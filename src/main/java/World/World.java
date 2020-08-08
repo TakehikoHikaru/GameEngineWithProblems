@@ -1,13 +1,14 @@
 package World;
 
 import Entities.*;
-import Graphics.Game;
+import Graphics.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class World {
 
@@ -43,7 +44,11 @@ public class World {
                             break;
                         case 0xFF4CFF00:
                             //Chão
-                            tiles[pos] = new FloorTile(Tile.tileFloor, i * 16, j * 16);
+                            if (Game.random.nextInt(100) < 6) {
+                                tiles[pos] = new FloorTile(Tile.grassFlower, i * 16, j * 16);
+                            } else {
+                                tiles[pos] = new FloorTile(Tile.tileFloor, i * 16, j * 16);
+                            }
                             break;
                         case 0xFF000000:
                             //Parede
@@ -68,7 +73,7 @@ public class World {
                             Game.entities.add(new Weapon(i * 16, j * 16, 16, 16, Entity.rightPistol));
                             break;
                         case 0xFF133F00:
-                            tiles[pos] = new WallTile(Tile.tileFloor,i*16,j*16);
+                            tiles[pos] = new WallTile(Tile.tileFloor, i * 16, j * 16);
                             break;
                     }
                 }
@@ -76,6 +81,23 @@ public class World {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void restartWorld(int level){
+        Game.entities = new ArrayList<Entity>();
+        Game.enemies = new ArrayList<Enemy>();
+        //Inicializa -spriteSheet- com arquivos de imagens
+        Game.spriteSheet = new SpriteSheet(System.getProperty("user.dir") + "/src/main/resources/res/SpritSheet.png");
+        //instacia o jogador
+        Game.player = new Player(0, 0, 16, 16, Game.spriteSheet.getSprite(0, 0, 16, 16));
+        //adiciona uma entidade do tipo jogar a lista de entidades
+        Game.entities.add(Game.player);
+        //Inicializa o map
+        Game.world = new World(System.getProperty("user.dir")+"/src/main/resources/res/"+"level_"+ level +".png");
+        Game.player.life = 100;
+        Game.player.ammo = 0;
+        Game.player.hasGun = false;
+        return;
     }
 
     public void render(Graphics g) {

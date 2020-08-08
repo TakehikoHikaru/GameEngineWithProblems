@@ -47,6 +47,7 @@ public class Player extends Entity {
     public static boolean shooting = false;
     public static boolean shootingMouse = false;
 
+
     public int mX = 0;
     public int mY = 0;
 
@@ -100,20 +101,8 @@ public class Player extends Entity {
         }
 
         if (life <= 0) {
-            Game.entities = new ArrayList<Entity>();
-            Game.enemies = new ArrayList<Enemy>();
-            //Inicializa -spriteSheet- com arquivos de imagens
-            Game.spriteSheet = new SpriteSheet(System.getProperty("user.dir") + "/src/main/resources/res/SpritSheet.png");
-            //instacia o jogador
-            Game.player = new Player(0, 0, 16, 16, Game.spriteSheet.getSprite(0, 0, 16, 16));
-            //adiciona uma entidade do tipo jogar a lista de entidades
-            Game.entities.add(Game.player);
-            //Inicializa o map
-            Game.world = new World(System.getProperty("user.dir") + "/src/main/resources/res/MapTest.png");
-            life = 100;
-            ammo = 0;
-            hasGun = false;
-            return;
+            Game.WorldStatus = Game.WorldStatusGameOver;
+            World.restartWorld(Game.currentLevel);
         }
 
 //        if (shooting && hasGun && ammo > 0) {
@@ -178,7 +167,7 @@ public class Player extends Entity {
                 }
             } else if (current instanceof Bullet) {
                 if (Entity.isColliding(this, current)) {
-                    ammo += 20;
+                    ammo += 30;
                     Game.entities.remove(i);
                 }
             } else if (current instanceof Weapon) {

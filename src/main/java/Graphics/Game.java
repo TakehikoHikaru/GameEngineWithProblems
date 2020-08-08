@@ -1,10 +1,8 @@
 package Graphics;
 
-import Entities.Enemy;
-import Entities.Entity;
-import Entities.Player;
-import Entities.ShootedBullet;
+import Entities.*;
 import World.*;
+import javafx.scene.transform.Scale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,11 +58,25 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
     public UI ui;
 
+    public static int currentLevel = 1;
+    public int maxLevel = 2;
+
+    private boolean restartGame = false;
+
+    final public static String WorldStatusMenu = "Menu";
+    final public static String WorldStatusGameOver = "Game_Over";
+    final public static String WorldStatusNormal = "Game_Normal";
+    public static String WorldStatus = WorldStatusMenu;
+
+    public Menu menu;
+
     public Game() throws IOException {
         random = new Random();
         //Habilita o keyListener nessa classe
         addKeyListener(this);
         addMouseListener(this);
+
+        menu = new Menu();
 
         //seta o tamanho da janela
         this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
@@ -76,7 +88,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         entities = new ArrayList<Entity>();
         enemies = new ArrayList<Enemy>();
         //Inicializa -spriteSheet- com arquivos de imagens
-        spriteSheet = new SpriteSheet(System.getProperty("user.dir")+"/src/main/resources/res/SpritSheet.png");
+        spriteSheet = new SpriteSheet(System.getProperty("user.dir") + "/src/main/resources/res/SpritSheet.png");
         //instacia o jogador
         player = new Player(0, 0, 16, 16, spriteSheet.getSprite(0, 0, 16, 16));
         //adiciona uma entidade do tipo jogar a lista de entidades
@@ -84,7 +96,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
         bullets = new ArrayList<ShootedBullet>();
         //Inicializa o map
-        world = new World(System.getProperty("user.dir")+"/src/main/resources/res/MapTest.png");
+        world = new World(System.getProperty("user.dir") + "/src/main/resources/res/level_1.png");
     }
 
     private void createFolder() throws IOException {
@@ -116,10 +128,10 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
             System.out.println("Could not find folder so created it");
         }
 
-        Path source = Paths.get(System.getProperty("user.dir")+"/src/main/resources/res/MapTest.png");
+        Path source = Paths.get(System.getProperty("user.dir") + "/src/main/resources/res/MapTest.png");
         Path dest = Paths.get(System.getenv("APPDATA") + "\\" + "TestGame\\Map.png");
 
-        Files.copy(source,dest);
+        Files.copy(source, dest);
     }
 
     /**
@@ -161,45 +173,80 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
     }
 
     public void tick() {
-        //executa o metodo tick para cada Entidade
-        for (int i = 0; i < entities.size(); i++) {
-            Entity e = entities.get(i);
-            e.tick();
+        if (WorldStatus == WorldStatusNormal) {
+            //executa o metodo tick para cada Entidade
+            for (int i = 0; i < entities.size(); i++) {
+                Entity e = entities.get(i);
+                e.tick();
+            }
+            for (int i = 0; i < bullets.size(); i++) {
+                bullets.get(i).tick();
+            }
+
+            if (enemies.size() == 0) {
+                currentLevel++;
+                if (currentLevel > maxLevel) {
+                    currentLevel = 1;
+                }
+
+                World.restartWorld(currentLevel);
+            }
+        }else if(WorldStatus == WorldStatusMenu){
+            menu.tick();
         }
-        for (int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).tick();
+        if (WorldStatus == WorldStatusGameOver && restartGame){
+            restartGame = false;
+            WorldStatus = WorldStatusNormal;
+            World.restartWorld(currentLevel);
         }
     }
 
     public void render() {
-        BufferStrategy bs = this.getBufferStrategy();
-        if (bs == null) {
-            this.createBufferStrategy(3);
-            return;
-        }
-        //set o layer do fundo;
-        Graphics g = image.getGraphics();
-        g.setColor(Color.blue);
-        g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        //Executa o metodo de render do map
-        world.render(g);
+            BufferStrategy bs = this.getBufferStrategy();
+            if (bs == null) {
+                this.createBufferStrategy(3);
+                return;
+            }
+            //set o layer do fundo;
+            Graphics g = image.getGraphics();
+            g.setColor(Color.black);
+            g.fillRect(0, 0, WIDTH, HEIGHT);
+        if(WorldStatus == WorldStatusNormal) {
+            //Executa o metodo de render do map
+            world.render(g);
 
-        //Executa o metodo render para cada Entidade
-        for (int i = 0; i < entities.size(); i++) {
-            Entity e = entities.get(i);
-            e.render(g);
+            //Executa o metodo render para cada Entidade
+            for (int i = 0; i < entities.size(); i++) {
+                Entity e = entities.get(i);
+                e.render(g);
+            }
+            for (int i = 0; i < bullets.size(); i++) {
+                bullets.get(i).render(g);
+            }
+            ui.render(g);
+        }else if(WorldStatus == WorldStatusMenu){
+            menu.render(g);
         }
-        for (int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).render(g);
-        }
-
         //renderiza Strings na tela
 //        g.setFont(new Font("Arial", Font.BOLD, 10));
 //        g.setColor(Color.white);
 //        g.drawString("Fps:", 10, 10);
 
-        ui.render(g);
+
+
+
+        if (WorldStatus == WorldStatusGameOver){
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setColor(new Color(0,0,0,100));
+            g2.fillRect(0,0,WIDTH* SCALE,HEIGHT*SCALE);
+            g.setFont(new Font("arial" , Font.BOLD , 50));
+            g.setColor(Color.red);
+            g.drawString("You Died",WIDTH/3, HEIGHT/2);
+            g.setFont(new Font("arial" , Font.BOLD , 20));
+            g.setColor(Color.white);
+            g.drawString("Press Enter",WIDTH/3, HEIGHT/2 + 70);
+        }
 
         g.dispose();
         g = bs.getDrawGraphics();
@@ -256,8 +303,11 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
             player.down = true;
         }
 
-        if (e.getKeyCode() == KeyEvent.VK_X){
+        if (e.getKeyCode() == KeyEvent.VK_X) {
             player.shooting = true;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            restartGame = true;
         }
     }
 
@@ -274,7 +324,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         } else if (e.getKeyCode() == KeyEvent.VK_S) {
             player.down = false;
         }
-        if (e.getKeyCode() == KeyEvent.VK_X){
+        if (e.getKeyCode() == KeyEvent.VK_X) {
             player.shooting = false;
         }
     }

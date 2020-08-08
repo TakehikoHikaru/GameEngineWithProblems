@@ -13,6 +13,7 @@ public class Enemy extends Entity {
     private double speed = 1;
     public boolean right, up, left, down;
 
+
     private int frames = 0;
     //Controla a velocidade da animação de caminhar
     private int maxFrames = 20;
@@ -22,11 +23,11 @@ public class Enemy extends Entity {
     private BufferedImage sprites[];
 
 
-    private int life = 50;
+    private int life = 20;
     private boolean isDamaged = false;
 
     private int damageFrames = 0;
-    private int maxDamageFrames = 30;
+    private int maxDamageFrames = 20;
 
 
     public Enemy(int x, int y, int width, int height, BufferedImage sprite) {
@@ -42,9 +43,9 @@ public class Enemy extends Entity {
     @Override
     public void tick() {
 
-        if (this.life < 20){
+        if (this.life < 10){
             speed = 2;
-            if (Game.enemies.size() == 1){
+            if (Game.enemies.size() <= Game.currentLevel){
                 speed = 5;
             }
         }
@@ -139,7 +140,7 @@ public class Enemy extends Entity {
 
             g.drawImage(Entity.damagedEnemy, this.getX() - Camera.x, this.getY() - Camera.y, null);
         } else {
-            if (Game.enemies.size() == 1){
+            if (Game.enemies.size() <= Game.currentLevel){
                 g.drawImage(Entity.rangeEnemy, this.getX() - Camera.x, this.getY() - Camera.y, null);
             }
             else{
