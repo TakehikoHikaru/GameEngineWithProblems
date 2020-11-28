@@ -1,7 +1,7 @@
 package Entities;
 
 import World.Camera;
-import Graphics.Game;
+import Main.Game;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

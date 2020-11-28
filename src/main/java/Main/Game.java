@@ -1,13 +1,14 @@
-package Graphics;
+package Main;
 
 import Entities.*;
 import World.*;
-import javafx.scene.transform.Scale;
+
+import Graphics.Menu;
+import Graphics.SpriteSheet;
+import Graphics.UI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
@@ -21,7 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Game extends Canvas implements Runnable, KeyListener, MouseListener {
+import static Main.Enums.GameStates.*;
+
+
+public class Game extends Canvas implements Runnable, MouseListener {
 
 
     // Janela
@@ -61,19 +65,16 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
     public static int currentLevel = 1;
     public int maxLevel = 2;
 
-    private boolean restartGame = false;
+    public static boolean restartGame = false;
 
-    final public static String WorldStatusMenu = "Menu";
-    final public static String WorldStatusGameOver = "Game_Over";
-    final public static String WorldStatusNormal = "Game_Normal";
-    public static String WorldStatus = WorldStatusMenu;
+    public static String WorldStatus = WorldStatusNormal;
 
     public Menu menu;
 
     public Game() throws IOException {
         random = new Random();
         //Habilita o keyListener nessa classe
-        addKeyListener(this);
+        addKeyListener(Main.Listeners.keyListener.keyListener());
         addMouseListener(this);
 
         menu = new Menu();
@@ -282,51 +283,6 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
             }
         }
         Stop();
-    }
-
-    //Metodo que leitura de teclado do java
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    //Metodo que leitura de teclado do java
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_D) {
-            player.right = true;
-        } else if (e.getKeyCode() == KeyEvent.VK_A) {
-            player.left = true;
-        }
-
-        if (e.getKeyCode() == KeyEvent.VK_W) {
-            player.up = true;
-        } else if (e.getKeyCode() == KeyEvent.VK_S) {
-            player.down = true;
-        }
-
-        if (e.getKeyCode() == KeyEvent.VK_X) {
-            player.shooting = true;
-        }
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            restartGame = true;
-        }
-    }
-
-    //Metodo que leitura de teclado do java
-    public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_D) {
-            player.right = false;
-        } else if (e.getKeyCode() == KeyEvent.VK_A) {
-            player.left = false;
-        }
-
-        if (e.getKeyCode() == KeyEvent.VK_W) {
-            player.up = false;
-        } else if (e.getKeyCode() == KeyEvent.VK_S) {
-            player.down = false;
-        }
-        if (e.getKeyCode() == KeyEvent.VK_X) {
-            player.shooting = false;
-        }
     }
 
     @Override

@@ -1,6 +1,6 @@
 package World;
 
-import Graphics.Game;
+import Main.Game;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

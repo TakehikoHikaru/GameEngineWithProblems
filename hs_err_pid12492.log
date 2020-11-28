@@ -95,8 +95,8 @@ J 656 C1 sun.awt.image.SunVolatileImage.validate(Ljava/awt/GraphicsConfiguration
 j  java.awt.Component$FlipBufferStrategy.revalidate(Z)V+82
 j  java.awt.Component$FlipBufferStrategy.revalidate()V+2
 j  java.awt.Component$FlipBufferStrategy.getDrawGraphics()Ljava/awt/Graphics;+1
-J 661 C1 Graphics.Game.render()V (155 bytes) @ 0x0000000002ec96a4 [0x0000000002ec8840+0xe64]
-J 559% C2 Graphics.Game.run()V (138 bytes) @ 0x0000000002e71360 [0x0000000002e70f20+0x440]
+J 661 C1 Main.Game.render()V (155 bytes) @ 0x0000000002ec96a4 [0x0000000002ec8840+0xe64]
+J 559% C2 Main.Game.run()V (138 bytes) @ 0x0000000002e71360 [0x0000000002e70f20+0x440]
 j  java.lang.Thread.run()V+11
 v  ~StubRoutines::call_stub
 
@@ -170,8 +170,8 @@ No events
 
 Deoptimization events (3 events):
 Event: 3.875 Thread 0x0000000002b33800 Uncommon trap: reason=null_check action=make_not_entrant pc=0x0000000002dd361c method=java.lang.String.equals(Ljava/lang/Object;)Z @ 8
-Event: 185.202 Thread 0x00000000189ab000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x0000000002e4451c method=Graphics.Game.run()V @ 59
-Event: 186.188 Thread 0x00000000189ab000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x0000000002e47dfc method=Graphics.Game.run()V @ 90
+Event: 185.202 Thread 0x00000000189ab000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x0000000002e4451c method=Main.Game.run()V @ 59
+Event: 186.188 Thread 0x00000000189ab000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x0000000002e47dfc method=Main.Game.run()V @ 90
 
 Classes redefined (0 events):
 No events
@@ -275,7 +275,7 @@ Dynamic libraries:
 
 VM Arguments:
 jvm_args: -agentlib:jdwp=transport=dt_socket,address=127.0.0.1:60494,suspend=y,server=n -javaagent:C:\Users\Guilherme\AppData\Local\JetBrains\Toolbox\apps\IDEA-C\ch-0\201.6668.121\plugins\java\lib\rt\debugger-agent.jar -Dfile.encoding=UTF-8 
-java_command: Graphics.Game
+java_command: Main.Game
 java_class_path (initial): C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\charsets.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\deploy.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\ext\access-bridge-64.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\ext\cldrdata.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\ext\dnsns.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\ext\jaccess.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\ext\jfxrt.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\ext\localedata.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\ext\nashorn.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\ext\sunec.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\ext\sunjce_provider.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\ext\sunmscapi.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\ext\sunpkcs11.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\ext\zipfs.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\javaws.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\jce.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\jfr.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\jfxswt.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\jsse.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\management-agent.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\plugin.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\resources.jar;C:\Users\Guilherme\Downloads\jdk1.8.0_221\jre\lib\rt.jar;C:\Users\Guilherme\Documents\GameEngineProject\target\classes;C:\Users\Guilherme\AppData\Local\JetBrains\Toolbox\apps\IDEA-C\ch-0\201.6668.121\lib\idea_rt.jar;C:\Users\Guilherme\AppData\Local\JetBrains\Toolbox\apps\IDEA-C\ch-0\201.6668.121\plugins\java\lib\rt\debugger-agent.jar
 Launcher Type: SUN_STANDARD
 

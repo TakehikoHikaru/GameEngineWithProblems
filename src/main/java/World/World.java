@@ -2,6 +2,7 @@ package World;
 
 import Entities.*;
 import Graphics.*;
+import Main.Game;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -133,16 +134,6 @@ public class World {
 
         int x4 = (int) (nextX / spriteSize);
         int y4 = (int) ((nextY - 1) / spriteSize);
-
-//        if ((tiles[x1 + (y1 * World.width)]) instanceof WallTile ||
-//                (tiles[x2 + (y2 * World.width)]) instanceof WallTile ||
-//                (tiles[x3 + (y3 * World.width)]) instanceof WallTile ||
-//                (tiles[x4 + (y4 * World.width)]) instanceof WallTile) {
-//            System.out.println("IsColliind");
-//            System.out.println(x1 + " " + x2 + " " + x3 + " " + x4 + " " + y1 + " " + y2 + " " + y3 + " " + y4);
-//        } else {
-//            System.out.println("Not" + x1 + " " + x2 + " " + x3 + " " + x4 + " " + y1 + " " + y2 + " " + y3 + " " + y4);
-//        }
 
         return !((tiles[x1 + (y1 * World.width)]) instanceof WallTile ||
                 (tiles[x2 + (y2 * World.width)]) instanceof WallTile ||

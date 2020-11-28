@@ -1,11 +1,12 @@
 package Entities;
 
-import Graphics.*;
 import World.*;
+import Main.Game;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+
+import static Main.Enums.GameStates.WorldStatusGameOver;
 
 public class Player extends Entity {
 
@@ -72,7 +73,7 @@ public class Player extends Entity {
     @Override
     public void tick() {
         moved = false;
-        if (right && World.isFree((int) (this.getX() + speed), this.getY())) {
+        if (right && World.isFree((int) (this.getX() + speed) + 13, this.getY())) {
             moved = true;
             dir = rightDir;
             setX(x += speed);
@@ -84,7 +85,7 @@ public class Player extends Entity {
         if (up && World.isFree(this.getX(), (int) (this.getY() - speed))) {
             moved = true;
             setY(y -= speed);
-        } else if (down && World.isFree(this.getX(), (int) (this.getY() + speed))) {
+        } else if (down && World.isFree(this.getX(), (int) (this.getY() + speed) + 15)) {
             moved = true;
             setY(y += speed);
         }
@@ -101,7 +102,7 @@ public class Player extends Entity {
         }
 
         if (life <= 0) {
-            Game.WorldStatus = Game.WorldStatusGameOver;
+            Game.WorldStatus = WorldStatusGameOver;
             World.restartWorld(Game.currentLevel);
         }
 
@@ -119,7 +120,7 @@ public class Player extends Entity {
 //                dx = -1;
 //            }
 //            ShootedBullet bullet = new ShootedBullet(this.getX() + px, this.getY() + py, 3, 3, null, dx, dy);
-//            Game.bullets.add(bullet);
+//            main.Game.bullets.add(bullet);
 //            shooting = false;
 //        }
 

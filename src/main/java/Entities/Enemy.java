@@ -1,6 +1,6 @@
 package Entities;
 
-import Graphics.Game;
+import Main.Game;
 import World.*;
 
 import java.awt.*;
@@ -10,7 +10,7 @@ public class Enemy extends Entity {
 
     private final int spriteSize = 16;
 
-    private double speed = 1;
+    private double speed = 0;
     public boolean right, up, left, down;
 
 

@@ -1,7 +1,7 @@
 package Entities;
 
 
-import Graphics.Game;
+import Main.Game;
 import World.Camera;
 
 import java.awt.*;
