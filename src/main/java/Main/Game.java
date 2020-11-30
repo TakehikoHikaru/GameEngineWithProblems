@@ -1,23 +1,19 @@
 package Main;
 
-import Entities.*;
-import World.*;
-
+import Entities.Enemy;
+import Entities.Entity;
+import Entities.Player;
+import Entities.ShootedBullet;
 import Graphics.Menu;
 import Graphics.SpriteSheet;
 import Graphics.UI;
+import World.World;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -25,7 +21,7 @@ import java.util.Random;
 import static Main.Enums.GameStates.*;
 
 
-public class Game extends Canvas implements Runnable, MouseListener {
+public class Game extends Canvas implements Runnable {
 
 
     // Janela
@@ -33,7 +29,7 @@ public class Game extends Canvas implements Runnable, MouseListener {
     // Tamanho e Escala da Janela
     public static final int WIDTH = 400;
     public static final int HEIGHT = 260;
-    private final int SCALE = 2;
+    public static final int SCALE = 2;
     //
     private Thread thread;
     // Verifica se o jogo esta rodando
@@ -75,7 +71,7 @@ public class Game extends Canvas implements Runnable, MouseListener {
         random = new Random();
         //Habilita o keyListener nessa classe
         addKeyListener(Main.Listeners.keyListener.keyListener());
-        addMouseListener(this);
+        addMouseListener(Main.Listeners.MyMouseListener.createMouseListener());
 
         menu = new Menu();
 
@@ -98,41 +94,6 @@ public class Game extends Canvas implements Runnable, MouseListener {
         bullets = new ArrayList<ShootedBullet>();
         //Inicializa o map
         world = new World(System.getProperty("user.dir") + "/src/main/resources/res/level_1.png");
-    }
-
-    private void createFolder() throws IOException {
-        String FileFolder = System.getenv("APPDATA") + "\\" + "TestGame";
-        System.out.println(System.getProperty("user.dir"));
-        String os = System.getProperty("os.name").toUpperCase();
-        if (os.contains("WIN")) {
-            FileFolder = System.getenv("APPDATA") + "\\" + "TestGame";
-            System.out.println("Found windows");
-        }
-        if (os.contains("MAC")) {
-            FileFolder = System.getProperty("user.home") + "/Library/Application " + "TestGame"
-                    + "TestGame";
-            System.out.println("Found mac");
-        }
-        if (os.contains("NUX")) {
-            FileFolder = System.getProperty("user.dir") + ".Launcher";
-            System.out.println("Found linux");
-        }
-
-        File directory = new File(FileFolder);
-
-        if (directory.exists()) {
-            System.out.println("Found folder");
-        }
-
-        if (directory.exists() == false) {
-            directory.mkdir();
-            System.out.println("Could not find folder so created it");
-        }
-
-        Path source = Paths.get(System.getProperty("user.dir") + "/src/main/resources/res/MapTest.png");
-        Path dest = Paths.get(System.getenv("APPDATA") + "\\" + "TestGame\\Map.png");
-
-        Files.copy(source, dest);
     }
 
     /**
@@ -192,10 +153,10 @@ public class Game extends Canvas implements Runnable, MouseListener {
 
                 World.restartWorld(currentLevel);
             }
-        }else if(WorldStatus == WorldStatusMenu){
+        } else if (WorldStatus == WorldStatusMenu) {
             menu.tick();
         }
-        if (WorldStatus == WorldStatusGameOver && restartGame){
+        if (WorldStatus == WorldStatusGameOver && restartGame) {
             restartGame = false;
             WorldStatus = WorldStatusNormal;
             World.restartWorld(currentLevel);
@@ -204,16 +165,16 @@ public class Game extends Canvas implements Runnable, MouseListener {
 
     public void render() {
 
-            BufferStrategy bs = this.getBufferStrategy();
-            if (bs == null) {
-                this.createBufferStrategy(3);
-                return;
-            }
-            //set o layer do fundo;
-            Graphics g = image.getGraphics();
-            g.setColor(Color.black);
-            g.fillRect(0, 0, WIDTH, HEIGHT);
-        if(WorldStatus == WorldStatusNormal) {
+        BufferStrategy bs = this.getBufferStrategy();
+        if (bs == null) {
+            this.createBufferStrategy(3);
+            return;
+        }
+        //set o layer do fundo;
+        Graphics g = image.getGraphics();
+        g.setColor(Color.black);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
+        if (WorldStatus == WorldStatusNormal) {
             //Executa o metodo de render do map
             world.render(g);
 
@@ -226,7 +187,7 @@ public class Game extends Canvas implements Runnable, MouseListener {
                 bullets.get(i).render(g);
             }
             ui.render(g);
-        }else if(WorldStatus == WorldStatusMenu){
+        } else if (WorldStatus == WorldStatusMenu) {
             menu.render(g);
         }
         //renderiza Strings na tela
@@ -234,19 +195,16 @@ public class Game extends Canvas implements Runnable, MouseListener {
 //        g.setColor(Color.white);
 //        g.drawString("Fps:", 10, 10);
 
-
-
-
-        if (WorldStatus == WorldStatusGameOver){
+        if (WorldStatus == WorldStatusGameOver) {
             Graphics2D g2 = (Graphics2D) g;
-            g2.setColor(new Color(0,0,0,100));
-            g2.fillRect(0,0,WIDTH* SCALE,HEIGHT*SCALE);
-            g.setFont(new Font("arial" , Font.BOLD , 50));
+            g2.setColor(new Color(0, 0, 0, 100));
+            g2.fillRect(0, 0, WIDTH * SCALE, HEIGHT * SCALE);
+            g.setFont(new Font("arial", Font.BOLD, 50));
             g.setColor(Color.red);
-            g.drawString("You Died",WIDTH/3, HEIGHT/2);
-            g.setFont(new Font("arial" , Font.BOLD , 20));
+            g.drawString("You Died", WIDTH / 3, HEIGHT / 2);
+            g.setFont(new Font("arial", Font.BOLD, 20));
             g.setColor(Color.white);
-            g.drawString("Press Enter",WIDTH/3, HEIGHT/2 + 70);
+            g.drawString("Press Enter", WIDTH / 3, HEIGHT / 2 + 70);
         }
 
         g.dispose();
@@ -283,32 +241,5 @@ public class Game extends Canvas implements Runnable, MouseListener {
             }
         }
         Stop();
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        player.shootingMouse = true;
-        player.mX = (e.getX() / SCALE);
-        player.mY = (e.getY() / SCALE);
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
     }
 }
