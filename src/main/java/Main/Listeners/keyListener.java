@@ -1,5 +1,7 @@
 package Main.Listeners;
 
+import Graphics.Menu;
+import Main.Enums.GameStates;
 import Main.Game;
 
 import java.awt.event.KeyEvent;
@@ -7,8 +9,8 @@ import java.awt.event.KeyListener;
 
 public class keyListener {
 
-    public static KeyListener keyListener(){
-       return new KeyListener() {
+    public static KeyListener keyListener() {
+        return new KeyListener() {
             //Metodo que leitura de teclado do java
             public void keyTyped(KeyEvent e) {
 
@@ -32,7 +34,14 @@ public class keyListener {
                     Game.player.shooting = true;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    Game.restartGame = true;
+                    if (Game.WorldStatus == GameStates.WorldStatusGameOver) {
+                        Game.restartGame = true;
+                    } else if (Game.WorldStatus == GameStates.WorldStatusMenu) {
+                        Menu.start = true;
+                    }
+                }
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
+                    Game.setWorldStatus(GameStates.WorldStatusMenu);
                 }
             }
 
