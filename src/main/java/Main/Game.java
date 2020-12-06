@@ -63,7 +63,7 @@ public class Game extends Canvas implements Runnable {
 
     public static boolean restartGame = false;
 
-    public static String WorldStatus = WorldStatusNormal;
+    public static String WorldStatus = WorldStatusMenu;
 
     public Menu menu;
 
@@ -241,5 +241,11 @@ public class Game extends Canvas implements Runnable {
             }
         }
         Stop();
+    }
+
+    //sets
+
+    public static void setWorldStatus(String worldStatus) {
+        WorldStatus = worldStatus;
     }
 }
