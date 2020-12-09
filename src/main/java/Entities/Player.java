@@ -67,7 +67,6 @@ public class Player extends Entity {
         for (int i = 0; i < leftPlayer.length; i++) {
             leftPlayer[i] = Game.spriteSheet.getSprite(spriteSize * i, spriteSize * 2, spriteSize, spriteSize);
         }
-
     }
 
     @Override
@@ -100,12 +99,10 @@ public class Player extends Entity {
                 }
             }
         }
-
         if (life <= 0) {
             Game.WorldStatus = WorldStatusGameOver;
             World.restartWorld(Game.currentLevel);
         }
-
 //        if (shooting && hasGun && ammo > 0) {
 //            shooting = false;
 //            ammo--;
@@ -123,7 +120,6 @@ public class Player extends Entity {
 //            main.Game.bullets.add(bullet);
 //            shooting = false;
 //        }
-
         if (shootingMouse) {
             shootingMouse = false;
             if (hasGun && ammo > 0) {
@@ -134,18 +130,14 @@ public class Player extends Entity {
                 int px = 0;
                 int py = 8;
 
-
                 ShootedBullet bullet = new ShootedBullet(this.getX() + px, this.getY() + py, 3, 3, null, dx, dy);
                 Game.bullets.add(bullet);
             }
         }
-
         collidingWithEntities();
-
         //Controla a World.Camera seguindo o jogador
         Camera.x = Camera.clamp(x - (Game.WIDTH / 2), World.width * 16 - Game.WIDTH, 0);
         Camera.y = Camera.clamp(y - (Game.HEIGHT / 2), World.height * 16 - Game.HEIGHT, 0);
-
     }
 
     private void heal(int heal) {
@@ -205,5 +197,4 @@ public class Player extends Entity {
             }
         }
     }
-
 }
