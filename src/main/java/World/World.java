@@ -19,6 +19,11 @@ public class World {
 
     final public static int spriteSize = 16;
 
+
+    /**
+     * Metodo responsavel por transformar uma imagem em um array, então percorrer ele e montar o mapa
+     * Com baso no código da cor de cada pixel
+     * */
     public World(String path) {
         try {
             BufferedImage map = ImageIO.read(new File(path));
@@ -31,11 +36,9 @@ public class World {
             for (int i = 0; i < map.getWidth(); i++) {
                 for (int j = 0; j < map.getHeight(); j++) {
                     int pos = i + (j * map.getWidth());
-
                     //Filtra os pixiels por cores.
                     //Por padrão o codigo hexadecimal tem 0xFF no inicio dele
                     tiles[pos] = new FloorTile(Tile.tileFloor, i * 16, j * 16);
-
                     switch (pixels[i + (j * map.getWidth())]) {
                         case 0xFF4800FF:
                             //player
@@ -84,7 +87,10 @@ public class World {
         }
     }
 
-    public static void restartWorld(int level){
+    /**
+     * Metodo improvisado para resetar o mundo
+     * */
+    public static void restartWorld(int level) {
         Game.entities = new ArrayList<Entity>();
         Game.enemies = new ArrayList<Enemy>();
         //Inicializa -spriteSheet- com arquivos de imagens
@@ -94,7 +100,7 @@ public class World {
         //adiciona uma entidade do tipo jogar a lista de entidades
         Game.entities.add(Game.player);
         //Inicializa o map
-        Game.world = new World(System.getProperty("user.dir")+"/src/main/resources/res/"+"level_"+ level +".png");
+        Game.world = new World(System.getProperty("user.dir") + "/src/main/resources/res/" + "level_" + level + ".png");
         Game.player.life = 100;
         Game.player.ammo = 0;
         Game.player.hasGun = false;
@@ -125,13 +131,10 @@ public class World {
     public static boolean isFree(double nextX, double nextY) {
         int x1 = (int) (nextX / spriteSize);
         int y1 = (int) (nextY / spriteSize);
-
         int x2 = (int) ((nextX - 1) / spriteSize);
         int y2 = (int) (nextY / spriteSize);
-
         int x3 = (int) ((nextX - 1) / spriteSize);
         int y3 = (int) ((nextY - 1) / spriteSize);
-
         int x4 = (int) (nextX / spriteSize);
         int y4 = (int) ((nextY - 1) / spriteSize);
 
@@ -139,10 +142,7 @@ public class World {
                 (tiles[x2 + (y2 * World.width)]) instanceof WallTile ||
                 (tiles[x3 + (y3 * World.width)]) instanceof WallTile ||
                 (tiles[x4 + (y4 * World.width)]) instanceof WallTile);
-
-
     }
-
 }
 
 

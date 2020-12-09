@@ -23,50 +23,43 @@ import static Main.Enums.GameStates.*;
 
 public class Game extends Canvas implements Runnable {
 
-
-    // Janela
     public static JFrame frame;
-    // Tamanho e Escala da Janela
-    public static final int WIDTH = 400;
-    public static final int HEIGHT = 260;
-    public static final int SCALE = 2;
-    //
     private Thread thread;
-    // Verifica se o jogo esta rodando
-    private boolean isRunning = true;
-    //Layer do fundo da tela
     private BufferedImage image;
-
-    //Arquivos com as Sprites do jogo
-    public static SpriteSheet spriteSheet;
-
-    //Lista de Entidades já adicionadas
-    public static List<Entity> entities;
-
-    //Lista todas a Entidades de inimigos
-    public static List<Enemy> enemies;
-
-    public static List<ShootedBullet> bullets;
-
-    //Objeto do jogador
     public static Player player;
-
-    //Estancia o mundo
     public static World world;
-
     public static Random random;
-
     public UI ui;
+    public Menu menu;
 
+    private boolean isRunning = true;
+    public static String WorldStatus = WorldStatusMenu;
+    public static boolean restartGame = false;
     public static int currentLevel = 1;
     public int maxLevel = 2;
 
-    public static boolean restartGame = false;
+    public static List<Enemy> enemies;
+    public static List<ShootedBullet> bullets;
+    public static SpriteSheet spriteSheet;
+    public static List<Entity> entities;
 
-    public static String WorldStatus = WorldStatusMenu;
+    public static final int WIDTH = 400;
+    public static final int HEIGHT = 260;
+    public static final int SCALE = 2;
 
-    public Menu menu;
+    /**
+     * Metodo que inicia o jogo
+     * */
+    public static void main(String[] args) throws IOException {
+        //Inicia a janela
+        Game game = new Game();
+        //inicia o jogo
+        game.Start();
+    }
 
+    /**
+     *  Construtor que inicializa as principais variaveis e logicas
+     * */
     public Game() throws IOException {
         random = new Random();
         //Habilita o keyListener nessa classe
@@ -90,7 +83,6 @@ public class Game extends Canvas implements Runnable {
         player = new Player(0, 0, 16, 16, spriteSheet.getSprite(0, 0, 16, 16));
         //adiciona uma entidade do tipo jogar a lista de entidades
         entities.add(player);
-
         bullets = new ArrayList<ShootedBullet>();
         //Inicializa o map
         world = new World(System.getProperty("user.dir") + "/src/main/resources/res/level_1.png");
@@ -113,11 +105,17 @@ public class Game extends Canvas implements Runnable {
         frame.setVisible(true);
     }
 
+    /**
+     * Inicia a Thread principal
+     * */
     public synchronized void Start() {
         thread = new Thread(this);
         thread.start();
     }
 
+    /**
+     * Para a Thread principal
+     * */
     public synchronized void Stop() {
         isRunning = false;
         try {
@@ -127,13 +125,9 @@ public class Game extends Canvas implements Runnable {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        //Inicia a janela
-        Game game = new Game();
-        //inicia o jogo
-        game.Start();
-    }
-
+    /**
+     * Metodo que consetra a maioria da logica do jogo e das entidades
+     * */
     public void tick() {
         if (WorldStatus == WorldStatusNormal) {
             //executa o metodo tick para cada Entidade
@@ -144,13 +138,11 @@ public class Game extends Canvas implements Runnable {
             for (int i = 0; i < bullets.size(); i++) {
                 bullets.get(i).tick();
             }
-
             if (enemies.size() == 0) {
                 currentLevel++;
                 if (currentLevel > maxLevel) {
                     currentLevel = 1;
                 }
-
                 World.restartWorld(currentLevel);
             }
         } else if (WorldStatus == WorldStatusMenu) {
@@ -163,8 +155,10 @@ public class Game extends Canvas implements Runnable {
         }
     }
 
+    /**
+     * Metodo que consentra a maioria das renderiazação do jogo e das entidades
+     * */
     public void render() {
-
         BufferStrategy bs = this.getBufferStrategy();
         if (bs == null) {
             this.createBufferStrategy(3);
@@ -177,7 +171,6 @@ public class Game extends Canvas implements Runnable {
         if (WorldStatus == WorldStatusNormal) {
             //Executa o metodo de render do map
             world.render(g);
-
             //Executa o metodo render para cada Entidade
             for (int i = 0; i < entities.size(); i++) {
                 Entity e = entities.get(i);
@@ -194,7 +187,6 @@ public class Game extends Canvas implements Runnable {
 //        g.setFont(new Font("Arial", Font.BOLD, 10));
 //        g.setColor(Color.white);
 //        g.drawString("Fps:", 10, 10);
-
         if (WorldStatus == WorldStatusGameOver) {
             Graphics2D g2 = (Graphics2D) g;
             g2.setColor(new Color(0, 0, 0, 100));
@@ -206,7 +198,6 @@ public class Game extends Canvas implements Runnable {
             g.setColor(Color.white);
             g.drawString("Press Enter", WIDTH / 3, HEIGHT / 2 + 70);
         }
-
         g.dispose();
         g = bs.getDrawGraphics();
         g.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
@@ -244,7 +235,6 @@ public class Game extends Canvas implements Runnable {
     }
 
     //sets
-
     public static void setWorldStatus(String worldStatus) {
         WorldStatus = worldStatus;
     }

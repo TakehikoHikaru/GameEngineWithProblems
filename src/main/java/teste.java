@@ -1,3 +1,4 @@
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class teste {
+
+
 
 
     private void createFolder() throws IOException {

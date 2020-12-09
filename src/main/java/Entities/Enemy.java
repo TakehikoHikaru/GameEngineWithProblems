@@ -42,14 +42,12 @@ public class Enemy extends Entity {
 
     @Override
     public void tick() {
-
         if (this.life < 10){
             speed = 2;
             if (Game.enemies.size() <= Game.currentLevel){
                 speed = 5;
             }
         }
-
         frames++;
         if (frames == maxFrames) {
             frames = 0;
@@ -58,7 +56,6 @@ public class Enemy extends Entity {
                 index = 0;
             }
         }
-
         if (!isCollidingWithPlayer()) {
             if (!isDamaged) {
                 if ((int) x < Game.player.getX() && World.isFree((getX() + speed), this.getY()) && !isColliding((int) (getX() + speed), this.getY())) {
@@ -78,11 +75,9 @@ public class Enemy extends Entity {
                 Game.player.life -= 10;
             }
         }
-
         if (this.life <= 0) {
             die();
         }
-
     }
 
     public boolean isCollidingWithPlayer() {
