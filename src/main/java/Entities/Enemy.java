@@ -42,9 +42,9 @@ public class Enemy extends Entity {
 
     @Override
     public void tick() {
-        if (this.life < 10){
+        if (this.life < 10) {
             speed = 2;
-            if (Game.enemies.size() <= Game.currentLevel){
+            if (Game.enemies.size() <= Game.currentLevel) {
                 speed = 5;
             }
         }
@@ -125,22 +125,21 @@ public class Enemy extends Entity {
 
     @Override
     public void render(Graphics g) {
-        if (isDamaged) {
-            damageFrames++;
-            if (damageFrames > maxDamageFrames) {
+                if (isDamaged) {
+                    damageFrames++;
+                    if (damageFrames > maxDamageFrames) {
 
-                damageFrames = 0;
-                this.isDamaged = false;
-            }
+                        damageFrames = 0;
+                        this.isDamaged = false;
+                    }
 
-            g.drawImage(Entity.damagedEnemy, this.getX() - Camera.x, this.getY() - Camera.y, null);
-        } else {
-            if (Game.enemies.size() <= Game.currentLevel){
-                g.drawImage(Entity.rangeEnemy, this.getX() - Camera.x, this.getY() - Camera.y, null);
+                    g.drawImage(Entity.damagedEnemy, this.getX() - Camera.x, this.getY() - Camera.y, null);
+                } else {
+                    if (Game.enemies.size() <= Game.currentLevel) {
+                        g.drawImage(Entity.rangeEnemy, this.getX() - Camera.x, this.getY() - Camera.y, null);
+                    } else {
+                        g.drawImage(sprites[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+                    }
+                }
             }
-            else{
-                g.drawImage(sprites[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
-            }
-            }
-    }
 }

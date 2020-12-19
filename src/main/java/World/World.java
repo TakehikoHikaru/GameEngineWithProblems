@@ -26,7 +26,8 @@ public class World {
      * */
     public World(String path) {
         try {
-            BufferedImage map = ImageIO.read(new File(path));
+            //BufferedImage map = ImageIO.read(new File(path));
+            BufferedImage map = ProceduralGenerator.generator();
             int[] pixels = new int[map.getWidth() * map.getHeight()];
             width = map.getWidth();
             height = map.getHeight();
@@ -82,7 +83,7 @@ public class World {
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
